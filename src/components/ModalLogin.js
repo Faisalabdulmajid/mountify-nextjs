@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 import "./AuthForms.css";
 
 export default function ModalLogin({ open, onClose, onRegister, onForgot }) {
@@ -214,10 +215,13 @@ export default function ModalLogin({ open, onClose, onRegister, onForgot }) {
           }}
           disabled={loading}
         >
-          <img
+          <Image
             src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
             alt="Google logo"
+            width={24}
+            height={24}
             style={{ width: 24, height: 24 }}
+            priority
           />
           Login dengan Google
         </button>
