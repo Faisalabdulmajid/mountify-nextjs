@@ -1,16 +1,17 @@
-import { getServerSession } from "next-auth";
-import { signIn } from "next-auth/react";
+"use client";
+import { useSession, signIn } from "next-auth/react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export default async function LoginPage() {
-  const session = await getServerSession();
+export default function LoginPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  if (session) {
-    // Jika sudah login, redirect ke halaman utama
-    if (typeof window !== "undefined") {
-      window.location.href = "/";
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/");
     }
-    return null;
-  }
+  }, [status, router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
