@@ -120,7 +120,7 @@ export default function HeaderWithNavbar({ user }) {
               <li>
                 <button
                   className="px-4 py-2 rounded-md font-medium bg-white/10 hover:bg-white/20 text-white transition"
-                  onClick={() => alert("Login dialog")}
+                  onClick={() => (window.location.href = "/login")}
                 >
                   Login
                 </button>
@@ -128,7 +128,7 @@ export default function HeaderWithNavbar({ user }) {
               <li>
                 <button
                   className="px-4 py-2 rounded-md font-medium bg-[#f58554] hover:bg-[#e07041] text-[#142640] transition"
-                  onClick={() => alert("Register dialog")}
+                  onClick={() => (window.location.href = "/register")}
                 >
                   Daftar
                 </button>
@@ -179,7 +179,7 @@ export default function HeaderWithNavbar({ user }) {
                     className="w-full px-8 py-4 text-left font-medium bg-white/10 hover:bg-white/20 text-white transition"
                     onClick={() => {
                       setMenuOpen(false);
-                      alert("Login dialog");
+                      window.location.href = "/login";
                     }}
                   >
                     Login
@@ -190,7 +190,7 @@ export default function HeaderWithNavbar({ user }) {
                     className="w-full px-8 py-4 text-left font-medium bg-[#f58554] hover:bg-[#e07041] text-[#142640] transition"
                     onClick={() => {
                       setMenuOpen(false);
-                      alert("Register dialog");
+                      window.location.href = "/register";
                     }}
                   >
                     Daftar
