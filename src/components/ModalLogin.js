@@ -1,45 +1,81 @@
 "use client";
-import { useSession, signIn } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import "../../../../frontend/src/pages/auth/AuthForms.css";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import "./AuthForms.css";
 
-export default function LoginPage() {
-  const { status } = useSession();
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+export default function ModalLogin({ open, onClose, onRegister, onForgot }) {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      router.replace("/");
+  if (!open) return null;
+
+  const handleManualLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    // Ganti URL di bawah dengan endpoint backend Anda jika ingin login manual aktif
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Login gagal");
+      onClose();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-  }, [status, router]);
+  };
 
   return (
     <div
-      className="auth-form-container"
       style={{
-        minHeight: "100vh",
+        position: "fixed",
+        inset: 0,
+        background: "rgba(44,62,80,0.18)",
+        zIndex: 9999,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#f6f7f9",
       }}
+      onClick={onClose}
     >
       <div
+        className="auth-form-container"
         style={{
-          width: 420,
+          width: 480,
           background: "#fff",
           borderRadius: 18,
-          boxShadow: "0 2px 16px rgba(44,62,80,0.08)",
+          boxShadow: "0 2px 16px rgba(44,62,80,0.18)",
           padding: 36,
           margin: 24,
           position: "relative",
         }}
+        onClick={(e) => e.stopPropagation()}
       >
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute",
+            top: 18,
+            right: 18,
+            background: "none",
+            border: "none",
+            fontSize: 24,
+            color: "#bdbdbd",
+            cursor: "pointer",
+            zIndex: 2,
+          }}
+          aria-label="Tutup"
+        >
+          ×
+        </button>
         <h2
           style={{
             textAlign: "center",
@@ -51,7 +87,22 @@ export default function LoginPage() {
         >
           Login Akun
         </h2>
-        <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+        <form autoComplete="off" onSubmit={handleManualLogin}>
+          {error && (
+            <div
+              style={{
+                color: "#e74c3c",
+                background: "#fbeeea",
+                borderRadius: 6,
+                padding: "8px 0",
+                marginBottom: 12,
+                textAlign: "center",
+                fontWeight: 600,
+              }}
+            >
+              {error}
+            </div>
+          )}
           <div className="auth-form-group">
             <label htmlFor="email_login">Email</label>
             <input
@@ -62,10 +113,10 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Masukkan email Anda"
               required
-              disabled
+              autoFocus
             />
           </div>
-          <div className="auth-form-group">
+          <div className="auth-form-group" style={{ position: "relative" }}>
             <label htmlFor="password_login">Password</label>
             <input
               type={showPassword ? "text" : "password"}
@@ -75,15 +126,22 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Masukkan password Anda"
               required
-              disabled
+              style={{ paddingRight: 44 }} // Tambah ruang untuk icon mata
             />
             <span
               onClick={() => setShowPassword((prev) => !prev)}
               style={{
                 cursor: "pointer",
-                marginLeft: "-30px",
-                position: "relative",
+                position: "absolute",
+                right: 18,
+                top: "50%",
+                transform: "translateY(-50%)",
                 zIndex: 2,
+                background: "none",
+                padding: 0,
+                display: "flex",
+                alignItems: "center",
+                height: 22,
               }}
               title={showPassword ? "Sembunyikan Password" : "Lihat Password"}
             >
@@ -96,6 +154,7 @@ export default function LoginPage() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                style={{ display: "block" }}
               >
                 <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
                 <circle cx="12" cy="12" r="3" />
@@ -103,24 +162,28 @@ export default function LoginPage() {
             </span>
           </div>
           <div className="auth-form-options">
-            <span
+            <button
+              type="button"
               className="auth-link"
               style={{
                 color: "#16a34a",
-                cursor: "not-allowed",
-                opacity: 0.7,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
               }}
+              onClick={onForgot}
             >
               Lupa Password?
-            </span>
+            </button>
           </div>
           <button
             type="submit"
             className="auth-button"
             style={{ background: "#16a34a" }}
-            disabled
+            disabled={loading}
           >
-            Login
+            {loading ? "Memproses..." : "Login"}
           </button>
         </form>
         <div className="auth-divider" style={{ margin: "28px 0 18px 0" }}>
@@ -157,50 +220,27 @@ export default function LoginPage() {
             style={{ width: 24, height: 24 }}
           />
           Login dengan Google
-          <span
-            style={{
-              color: "#e67e22",
-              fontSize: "0.95em",
-              marginLeft: 8,
-              fontWeight: 600,
-              display: "flex",
-              alignItems: "center",
-            }}
-            title="Fitur dalam pengembangan"
-          >
-            (Beta)
-            <svg
-              style={{ marginLeft: 2, verticalAlign: "middle" }}
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#e67e22"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="16" x2="12" y2="12" />
-              <line x1="12" y1="8" x2="12" y2="8" />
-            </svg>
-          </span>
         </button>
         <div
           className="auth-navigation-prompt"
           style={{ textAlign: "center", marginTop: 24 }}
         >
           Belum punya akun?{" "}
-          <a
-            href="/register"
+          <button
+            type="button"
             className="auth-link"
             style={{
               color: "#16a34a",
               fontWeight: 600,
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
             }}
+            onClick={onRegister}
           >
             Daftar sekarang
-          </a>
+          </button>
         </div>
       </div>
     </div>

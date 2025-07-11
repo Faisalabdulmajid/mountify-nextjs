@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import mountifyLogo from "@/assets/icon/mountify.png";
+import AuthModal from "../AuthModal";
 
 const MenuIcon = () => (
   <svg
@@ -43,6 +44,7 @@ export default function HeaderWithNavbar({ user }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -120,7 +122,7 @@ export default function HeaderWithNavbar({ user }) {
               <li>
                 <button
                   className="px-4 py-2 rounded-md font-medium bg-white/10 hover:bg-white/20 text-white transition"
-                  onClick={() => (window.location.href = "/login")}
+                  onClick={() => setShowAuth(true)}
                 >
                   Login
                 </button>
@@ -128,7 +130,7 @@ export default function HeaderWithNavbar({ user }) {
               <li>
                 <button
                   className="px-4 py-2 rounded-md font-medium bg-[#f58554] hover:bg-[#e07041] text-[#142640] transition"
-                  onClick={() => (window.location.href = "/register")}
+                  onClick={() => setShowAuth(true)}
                 >
                   Daftar
                 </button>
@@ -179,7 +181,7 @@ export default function HeaderWithNavbar({ user }) {
                     className="w-full px-8 py-4 text-left font-medium bg-white/10 hover:bg-white/20 text-white transition"
                     onClick={() => {
                       setMenuOpen(false);
-                      window.location.href = "/login";
+                      setShowAuth(true);
                     }}
                   >
                     Login
@@ -190,7 +192,7 @@ export default function HeaderWithNavbar({ user }) {
                     className="w-full px-8 py-4 text-left font-medium bg-[#f58554] hover:bg-[#e07041] text-[#142640] transition"
                     onClick={() => {
                       setMenuOpen(false);
-                      window.location.href = "/register";
+                      setShowAuth(true);
                     }}
                   >
                     Daftar
@@ -207,6 +209,7 @@ export default function HeaderWithNavbar({ user }) {
           onClick={() => setMenuOpen(false)}
         ></div>
       )}
+      <AuthModal open={showAuth} onClose={() => setShowAuth(false)} />
     </header>
   );
 }
