@@ -28,7 +28,7 @@ const menu = [
   {
     title: "Kelola Pengguna",
     icon: "bi bi-people-fill",
-    link: "/admin/users",
+    link: "/admin/pengguna",
   },
   {
     title: "Pengumuman",

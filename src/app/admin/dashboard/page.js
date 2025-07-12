@@ -166,7 +166,9 @@ export default function AdminDashboardPage() {
       <AdminSidebar />
       <main className="flex-1 ml-64 min-h-screen bg-gray-50 px-8 py-10">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-          <h1 className="text-4xl font-extrabold text-green-700 tracking-tight drop-shadow">Dashboard Admin</h1>
+          <h1 className="text-4xl font-extrabold text-green-700 tracking-tight drop-shadow">
+            Dashboard Admin
+          </h1>
           <div className="flex gap-3">
             <a
               href="/"
@@ -196,14 +198,20 @@ export default function AdminDashboardPage() {
                 <i className={`bi ${s.icon}`}></i>
               </div>
               <div>
-                <div className="text-3xl font-extrabold text-gray-800">{s.value}</div>
-                <div className="text-gray-500 text-base font-medium mt-1">{s.label}</div>
+                <div className="text-3xl font-extrabold text-gray-800">
+                  {s.value}
+                </div>
+                <div className="text-gray-500 text-base font-medium mt-1">
+                  {s.label}
+                </div>
               </div>
             </div>
           ))}
         </section>
         <section>
-          <h2 className="text-2xl font-bold mb-6 text-gray-700 tracking-tight">Menu Manajemen</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-700 tracking-tight">
+            Menu Manajemen
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {menu.map((m) => (
               <a
@@ -215,7 +223,9 @@ export default function AdminDashboardPage() {
                   <i className={m.icon}></i>
                 </div>
                 <div>
-                  <div className="text-xl font-bold mb-2 text-gray-800">{m.title}</div>
+                  <div className="text-xl font-bold mb-2 text-gray-800">
+                    {m.title}
+                  </div>
                   <div className="text-gray-500 text-base">{m.desc}</div>
                 </div>
               </a>

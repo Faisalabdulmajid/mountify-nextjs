@@ -70,10 +70,12 @@ export default function KelolaGunungPage() {
   return (
     <div className="flex">
       <AdminSidebar />
-      <main className="flex-1 ml-64 min-h-screen bg-gray-50">
-        <div className="px-8 py-10">
+      <main className="flex-1 ml-64 min-h-screen bg-gray-50 px-8 py-10">
+        <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl p-10 border border-gray-100">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-extrabold text-green-700 tracking-tight drop-shadow">Manajemen Data Gunung</h1>
+            <h1 className="text-3xl font-extrabold text-green-700 tracking-tight drop-shadow">
+              Manajemen Data Gunung
+            </h1>
             <Link
               href="/admin/gunung/tambah"
               className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-green-600 text-white font-semibold shadow hover:bg-green-700 transition"
@@ -192,7 +194,10 @@ export default function KelolaGunungPage() {
               <tbody>
                 {currentItems.length > 0 ? (
                   currentItems.map((gunung, idx) => (
-                    <tr key={gunung.id_gunung} className="border-b hover:bg-gray-50 transition">
+                    <tr
+                      key={gunung.id_gunung}
+                      className="border-b hover:bg-gray-50 transition"
+                    >
                       <td className="px-5 py-3 font-semibold text-gray-700">
                         {indexOfFirstItem + idx + 1}
                       </td>
@@ -227,7 +232,10 @@ export default function KelolaGunungPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={6} className="text-center py-10 text-gray-400 text-lg">
+                    <td
+                      colSpan={6}
+                      className="text-center py-10 text-gray-400 text-lg"
+                    >
                       Tidak ada data gunung yang cocok dengan filter.
                     </td>
                   </tr>
@@ -237,7 +245,9 @@ export default function KelolaGunungPage() {
           </div>
           <div className="flex flex-col md:flex-row items-center justify-between mt-8 gap-4">
             <div className="text-sm text-gray-500">
-              Menampilkan {indexOfFirstItem + 1} - {indexOfFirstItem + currentItems.length} dari {sortedAndFilteredGunung.length} data
+              Menampilkan {indexOfFirstItem + 1} -{" "}
+              {indexOfFirstItem + currentItems.length} dari{" "}
+              {sortedAndFilteredGunung.length} data
             </div>
             <div className="flex gap-2 items-center">
               <button
@@ -253,7 +263,9 @@ export default function KelolaGunungPage() {
               <button
                 className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition"
                 disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
               >
                 Next
               </button>

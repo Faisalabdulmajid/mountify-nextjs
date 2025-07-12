@@ -1,12 +1,160 @@
-// Halaman Explore Next.js - Porting Lengkap dari Frontend
 "use client";
+// Fungsi deskripsi parameter sesuai dokumentasi
+function getParameterDescription(key) {
+  switch (key) {
+    case "Tingkat Kesulitan":
+      return "Penilaian tingkat kesulitan pendakian mengacu pada standar nasional dan internasional. Tingkat kesulitan mempengaruhi kebutuhan fisik, teknis, dan pengalaman pendaki.";
+    case "Tingkat Keamanan":
+      return "Keamanan pendakian meliputi perlindungan teknis dan risiko alam. Risiko alam: aktivitas vulkanik, cuaca ekstrem, satwa liar, kebakaran hutan, dan geomorfologi jalur.";
+    case "Durasi Pendakian":
+      return "Alokasi waktu pendakian mempengaruhi kebutuhan logistik dan stamina.";
+    case "Ketinggian Maksimal":
+      return "Ketinggian gunung (mdpl) mempengaruhi risiko AMS (Acute Mountain Sickness). Semakin tinggi, semakin berat tantangan fisik dan risiko kesehatan.";
+    case "Kualitas Fasilitas":
+      return "Fasilitas pendukung meliputi basecamp, shelter, warung, toilet, dan sumber air. Fasilitas mempengaruhi kenyamanan dan keamanan logistik.";
+    case "Kualitas Area Kemah":
+      return "Area kemah dinilai dari kelayakan, perlindungan, dan akses air. Area kemah yang baik meningkatkan kenyamanan dan keselamatan.";
+    case "Keindahan Pemandangan":
+      return "Penilaian keindahan pemandangan mempengaruhi pengalaman visual pendaki.";
+    case "Variasi Lanskap":
+      return "Variasi lanskap dinilai dari jumlah dan jenis ekosistem yang dilewati. Semakin bervariasi, semakin kaya pengalaman pendakian.";
+    case "Ketersediaan Air":
+      return "Ketersediaan air penting untuk logistik. Pastikan selalu cek info sumber air sebelum pendakian.";
+    case "Perlindungan Angin":
+      return "Perlindungan dari angin dinilai dari lokasi area kemah/jalur. Area terlindung meningkatkan kenyamanan dan keamanan.";
+    case "Sinyal Komunikasi":
+      return "Ketersediaan sinyal komunikasi (seluler/radio) di jalur dan area kemah penting untuk keamanan dan koordinasi.";
+    case "Keamanan Insiden":
+      return "Tingkat keamanan insiden mencakup risiko kecelakaan, bencana alam, dan kriminalitas.";
+    default:
+      return key;
+  }
+}
+
+// Fungsi untuk mengambil daftar value dan penjelasan sesuai label
+function getParameterValues(key) {
+  switch (key) {
+    case "Tingkat Kesulitan":
+      return generateUniqueScaleOptions(1, 10, getDifficultyDescription);
+    case "Tingkat Keamanan":
+      return generateUniqueScaleOptions(1, 10, getSafetyDescription);
+    case "Kualitas Fasilitas":
+      return generateUniqueScaleOptions(1, 10, getFacilityDescription);
+    case "Kualitas Area Kemah":
+      return generateUniqueScaleOptions(1, 10, getCampQualityDescription);
+    case "Keindahan Pemandangan":
+      return generateUniqueScaleOptions(1, 10, getSceneryDescription);
+    case "Ketersediaan Air":
+      return generateUniqueScaleOptions(1, 10, getWaterAvailabilityDescription);
+    case "Variasi Lanskap":
+      return generateUniqueScaleOptions(
+        1,
+        10,
+        getLandscapeVariationDescription
+      );
+    case "Perlindungan Angin":
+      return generateUniqueScaleOptions(1, 10, getWindProtectionDescription);
+    case "Sinyal Komunikasi":
+      return generateUniqueScaleOptions(1, 10, getCommunicationDescription);
+    case "Keamanan Insiden":
+      return generateUniqueScaleOptions(1, 10, getIncidentSafetyDescription);
+    case "Ketinggian Maksimal":
+      return [
+        { value: 1500, label: "<1.500 mdpl: Risiko AMS minimal" },
+        {
+          value: 3500,
+          label:
+            "1.500-3.500 mdpl: Risiko sedang, aklimatisasi mulai diperlukan",
+        },
+        {
+          value: 5500,
+          label: "3.500-5.500 mdpl: Risiko tinggi, aklimatisasi wajib",
+        },
+        { value: 6000, label: ">5.500 mdpl: Ekspedisi ekstrem" },
+      ];
+    case "Durasi Pendakian":
+      return [
+        { value: 1, label: "1 Hari (Tektok): Pulang-pergi tanpa menginap" },
+        {
+          value: 48,
+          label: "2 Hari 1 Malam (2D1N): Standar umum di Indonesia",
+        },
+        {
+          value: 72,
+          label: "3 Hari 2 Malam (3D2N): Untuk jalur lebih panjang",
+        },
+        { value: 96, label: ">3 Hari: Ekspedisi gunung terpencil/kompleks" },
+      ];
+    default:
+      return [];
+  }
+}
+
+// Halaman Explore Next.js - Porting Lengkap dari Frontend
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 // import "./explore.css"; // Sudah tidak digunakan, semua style pakai Tailwind
+
 import HeaderWithNavbar from "@/components/layout/HeaderWithNavbar";
 import Footer from "@/components/layout/Footer";
+
+// --- Komponen Modal ---
+function InfoModal({ open, onClose, title, description, values }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="bg-white rounded-lg shadow-2xl border-2 max-w-sm w-full p-6 relative">
+        <button
+          className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-xl font-bold"
+          onClick={onClose}
+          aria-label="Tutup"
+        >
+          &times;
+        </button>
+        <h2 className="text-lg font-bold mb-2 text-amber-900">{title}</h2>
+        <div className="text-sm text-gray-700 mb-3 whitespace-pre-line">
+          {description}
+        </div>
+        {values && values.length > 0 && (
+          <div className="mt-2">
+            <div className="font-semibold text-xs text-gray-600 mb-1">
+              Pilihan dan Penjelasan:
+            </div>
+            <ul className="text-xs text-gray-700 space-y-1">
+              {values.map((item, idx) => (
+                <li key={idx} className="flex gap-2">
+                  <span className="font-bold text-amber-900">
+                    {item.value}:
+                  </span>
+                  <span>{item.label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// --- Komponen Icon Tanda Tanya ---
+function QuestionIcon({ onClick }) {
+  return (
+    <button
+      type="button"
+      className="ml-1 text-amber-700 hover:text-amber-900 focus:outline-none"
+      onClick={onClick}
+      aria-label="Info"
+      tabIndex={0}
+    >
+      <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M18 10A8 8 0 1 1 2 10a8 8 0 0 1 16 0ZM9 14a1 1 0 1 0 2 0 1 1 0 0 0-2 0Zm2-2V9a2 2 0 1 0-4 0h2a1 1 0 1 1 2 0c0 1.104-.896 2-2 2a1 1 0 0 0 0 2h2Z" />
+      </svg>
+    </button>
+  );
+}
 
 // --- Konstanta Preferensi Awal ---
 const INITIAL_PREFERENCES = {
@@ -375,46 +523,54 @@ function CardImage({ src, alt }) {
 
 // --- Main ExplorePage Component ---
 function ExplorePage() {
-  // Fungsi untuk mengambil semua data gunung
-  const handleShowAllMountains = async () => {
-    setIsCalculating(true);
-    setError(null);
-    setResults([]);
-    try {
-      const response = await fetch(`${API_BASE_URL}/gunung`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
-      if (!response.ok) throw new Error("Gagal mengambil data gunung");
-      const data = await response.json();
-      setResults(data.gunung || data);
-      setTimeout(
-        () => resultsRef.current?.scrollIntoView({ behavior: "smooth" }),
-        100
-      );
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsCalculating(false);
-    }
+  // Fungsi untuk menutup modal info
+  const closeInfoModal = () => {
+    setModalInfo({ open: false, title: "", description: "" });
   };
+  // Fungsi untuk menangani perubahan input preferensi
+  const handleChange = (e) => {
+    const { name, value, type } = e.target;
+    setPreferences((prev) => ({
+      ...prev,
+      [name]: type === "number" ? Number(value) : value,
+    }));
+  };
+
+  // --- State Hooks ---
   const [preferences, setPreferences] = useState(INITIAL_PREFERENCES);
   const [inputType, setInputType] = useState(INITIAL_PREFERENCES.inputType);
+  const [modalInfo, setModalInfo] = useState({
+    open: false,
+    title: "",
+    description: "",
+    values: [],
+  });
   const [results, setResults] = useState([]);
-  const [isCalculating, setIsCalculating] = useState(false);
   const [error, setError] = useState(null);
+  const [isCalculating, setIsCalculating] = useState(false);
   const resultsRef = useRef(null);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPreferences((prev) => ({ ...prev, [name]: Number(value), inputType }));
+  // Fungsi untuk membuka modal info dengan isi sesuai dokumentasi dan daftar value
+  const openInfoModal = (title, key) => {
+    setModalInfo({
+      open: true,
+      title,
+      description: getParameterDescription(key),
+      values: getParameterValues(key),
+    });
+  };
+
+  // Stub: Fungsi untuk tombol "Lihat Semua Gunung"
+  const handleShowAllMountains = () => {
+    // Implementasi bisa ditambahkan sesuai kebutuhan
+    // Untuk saat ini, tidak melakukan apa-apa
   };
 
   const handleReset = () => {
-    setPreferences({ ...INITIAL_PREFERENCES, inputType });
+    setPreferences({
+      ...INITIAL_PREFERENCES,
+      inputType: preferences.inputType,
+    });
     setResults([]);
     setError(null);
   };
@@ -478,12 +634,11 @@ function ExplorePage() {
               <button
                 type="button"
                 className={`px-4 py-2 rounded font-semibold border transition ${
-                  inputType === "dropdown"
+                  preferences.inputType === "dropdown"
                     ? "bg-amber-900 text-white border-amber-900"
                     : "bg-white text-amber-900 border-amber-900"
                 }`}
                 onClick={() => {
-                  setInputType("dropdown");
                   setPreferences((prev) => ({
                     ...prev,
                     inputType: "dropdown",
@@ -495,12 +650,11 @@ function ExplorePage() {
               <button
                 type="button"
                 className={`px-4 py-2 rounded font-semibold border transition ${
-                  inputType === "range"
+                  preferences.inputType === "range"
                     ? "bg-amber-900 text-white border-amber-900"
                     : "bg-white text-amber-900 border-amber-900"
                 }`}
                 onClick={() => {
-                  setInputType("range");
                   setPreferences((prev) => ({ ...prev, inputType: "range" }));
                 }}
               >
@@ -515,10 +669,15 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="max_kesulitan_skala"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
-                Tingkat Kesulitan Maksimal{" "}
-                <span className="text-xs text-gray-500">
+                Tingkat Kesulitan Maksimal
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal("Tingkat Kesulitan", "Tingkat Kesulitan")
+                  }
+                />
+                <span className="text-xs text-gray-500 ml-2">
                   ({getDifficultyDescription(preferences.max_kesulitan_skala)})
                 </span>
               </label>
@@ -534,10 +693,15 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="min_keamanan_skala"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
-                Tingkat Keamanan Minimal{" "}
-                <span className="text-xs text-gray-500">
+                Tingkat Keamanan Minimal
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal("Tingkat Keamanan", "Tingkat Keamanan")
+                  }
+                />
+                <span className="text-xs text-gray-500 ml-2">
                   ({getSafetyDescription(preferences.min_keamanan_skala)})
                 </span>
               </label>
@@ -553,9 +717,14 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="max_estimasi_waktu_jam"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
                 Durasi Maksimal Pendakian (jam)
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal("Durasi Pendakian", "Durasi Pendakian")
+                  }
+                />
               </label>
               <input
                 type="number"
@@ -571,10 +740,15 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="max_ketinggian_mdpl"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
-                Ketinggian Maksimal (mdpl){" "}
-                <span className="text-xs text-gray-500">
+                Ketinggian Maksimal (mdpl)
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal("Ketinggian Maksimal", "Ketinggian Maksimal")
+                  }
+                />
+                <span className="text-xs text-gray-500 ml-2">
                   ({getAltitudeDescription(preferences.max_ketinggian_mdpl)})
                 </span>
               </label>
@@ -592,10 +766,15 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="min_kualitas_fasilitas_skala"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
-                Kualitas Fasilitas Minimal{" "}
-                <span className="text-xs text-gray-500">
+                Kualitas Fasilitas Minimal
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal("Kualitas Fasilitas", "Kualitas Fasilitas")
+                  }
+                />
+                <span className="text-xs text-gray-500 ml-2">
                   (
                   {getFacilityDescription(
                     preferences.min_kualitas_fasilitas_skala
@@ -615,10 +794,15 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="min_kualitas_kemah_skala"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
-                Kualitas Area Kemah Minimal{" "}
-                <span className="text-xs text-gray-500">
+                Kualitas Area Kemah Minimal
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal("Kualitas Area Kemah", "Kualitas Area Kemah")
+                  }
+                />
+                <span className="text-xs text-gray-500 ml-2">
                   (
                   {getCampQualityDescription(
                     preferences.min_kualitas_kemah_skala
@@ -638,10 +822,18 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="min_keindahan_pemandangan_skala"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
-                Keindahan Pemandangan Minimal{" "}
-                <span className="text-xs text-gray-500">
+                Keindahan Pemandangan Minimal
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal(
+                      "Keindahan Pemandangan",
+                      "Keindahan Pemandangan"
+                    )
+                  }
+                />
+                <span className="text-xs text-gray-500 ml-2">
                   (
                   {getSceneryDescription(
                     preferences.min_keindahan_pemandangan_skala
@@ -661,10 +853,15 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="min_ketersediaan_air"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
-                Ketersediaan Air Minimal{" "}
-                <span className="text-xs text-gray-500">
+                Ketersediaan Air Minimal
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal("Ketersediaan Air", "Ketersediaan Air")
+                  }
+                />
+                <span className="text-xs text-gray-500 ml-2">
                   (
                   {getWaterAvailabilityDescription(
                     preferences.min_ketersediaan_air
@@ -684,10 +881,15 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="min_variasi_lanskap"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
-                Variasi Lanskap Minimal{" "}
-                <span className="text-xs text-gray-500">
+                Variasi Lanskap Minimal
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal("Variasi Lanskap", "Variasi Lanskap")
+                  }
+                />
+                <span className="text-xs text-gray-500 ml-2">
                   (
                   {getLandscapeVariationDescription(
                     preferences.min_variasi_lanskap
@@ -707,10 +909,15 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="min_perlindungan_angin"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
-                Perlindungan Angin Minimal{" "}
-                <span className="text-xs text-gray-500">
+                Perlindungan Angin Minimal
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal("Perlindungan Angin", "Perlindungan Angin")
+                  }
+                />
+                <span className="text-xs text-gray-500 ml-2">
                   (
                   {getWindProtectionDescription(
                     preferences.min_perlindungan_angin
@@ -730,10 +937,15 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="min_jaringan_komunikasi"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
-                Sinyal Minimal{" "}
-                <span className="text-xs text-gray-500">
+                Sinyal Minimal
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal("Sinyal Komunikasi", "Sinyal Komunikasi")
+                  }
+                />
+                <span className="text-xs text-gray-500 ml-2">
                   (
                   {getCommunicationDescription(
                     preferences.min_jaringan_komunikasi
@@ -753,10 +965,15 @@ function ExplorePage() {
             <div>
               <label
                 htmlFor="min_tingkat_keamanan_insiden"
-                className="block font-medium text-gray-700 mb-1"
+                className="font-medium text-gray-700 mb-1 flex items-center"
               >
-                Insiden Minimal{" "}
-                <span className="text-xs text-gray-500">
+                Insiden Minimal
+                <QuestionIcon
+                  onClick={() =>
+                    openInfoModal("Keamanan Insiden", "Keamanan Insiden")
+                  }
+                />
+                <span className="text-xs text-gray-500 ml-2">
                   (
                   {getIncidentSafetyDescription(
                     preferences.min_tingkat_keamanan_insiden
@@ -896,6 +1113,14 @@ function ExplorePage() {
             )}
           </div>
         </div>
+        {/* Modal Info */}
+        <InfoModal
+          open={modalInfo.open}
+          onClose={closeInfoModal}
+          title={modalInfo.title}
+          description={modalInfo.description}
+          values={modalInfo.values}
+        />
       </main>
       <Footer />
     </>

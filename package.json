@@ -9,10 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tiptap/extension-link": "^2.26.1",
+    "@tiptap/react": "^2.26.1",
+    "@tiptap/starter-kit": "^2.26.1",
     "next": "15.3.5",
     "next-auth": "^4.24.11",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sweetalert2": "^11.22.2",
+    "sweetalert2-react-content": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
