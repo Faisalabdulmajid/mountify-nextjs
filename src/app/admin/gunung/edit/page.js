@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import AdminSidebar from "../../../../components/admin/AdminSidebar";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
@@ -202,13 +203,15 @@ export default function EditGunungPage() {
                 </label>
                 <div className="mb-3">
                   {fotoPreview ? (
-                    <img
+                    <Image
                       src={fotoPreview}
                       alt="Preview"
-                      className="w-full h-52 object-cover rounded-lg border border-gray-200 shadow-sm"
+                      width={600}
+                      height={208}
+                      className="w-full h-52 object-cover rounded-lg border-gray-200 shadow-sm"
                     />
                   ) : (
-                    <div className="w-full h-52 flex items-center justify-center bg-gray-100 rounded-lg text-gray-400 border border-dashed border-2 border-gray-200">
+                    <div className="w-full h-52 flex items-center justify-center bg-gray-100 rounded-lg text-gray-400 border-dashed border-2 border-gray-200">
                       <i className="bi bi-image-alt text-5xl"></i>
                     </div>
                   )}

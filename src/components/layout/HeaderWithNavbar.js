@@ -100,22 +100,7 @@ export default function HeaderWithNavbar({ user }) {
               Home
             </Link>
           </li>
-          <li>
-            <Link
-              href="/explore"
-              className="px-4 py-2 rounded-md font-medium hover:bg-white/10 transition"
-            >
-              Rekomendasi
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/tentang"
-              className="px-4 py-2 rounded-md font-medium hover:bg-white/10 transition"
-            >
-              Tentang
-            </Link>
-          </li>
+          {/* ...existing code... */}
           {/* Tombol Login & Daftar jika belum login */}
           {!user && (
             <>
@@ -155,24 +140,7 @@ export default function HeaderWithNavbar({ user }) {
                 Home
               </Link>
             </li>
-            <li>
-              <Link
-                href="/explore"
-                className="w-full px-8 py-4 text-left font-medium hover:bg-white/10 transition"
-                onClick={() => setMenuOpen(false)}
-              >
-                Rekomendasi
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/tentang"
-                className="w-full px-8 py-4 text-left font-medium hover:bg-white/10 transition"
-                onClick={() => setMenuOpen(false)}
-              >
-                Tentang
-              </Link>
-            </li>
+            {/* ...existing code... */}
             {/* Tombol Login & Daftar jika belum login di mobile */}
             {!user && (
               <>
