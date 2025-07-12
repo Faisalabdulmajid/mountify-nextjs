@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import "./AuthForms.css";
 
 export default function ModalForgotPassword({ open, onClose, onLogin }) {
   const [email, setEmail] = useState("");
@@ -36,137 +35,81 @@ export default function ModalForgotPassword({ open, onClose, onLogin }) {
 
   return (
     <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(44,62,80,0.18)",
-        zIndex: 9999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#2c3e50]/20"
       onClick={onClose}
     >
       <div
-        className="auth-form-container"
-        style={{
-          width: 420,
-          background: "#fff",
-          borderRadius: 18,
-          boxShadow: "0 2px 16px rgba(44,62,80,0.18)",
-          padding: 36,
-          margin: 24,
-          position: "relative",
-        }}
+        className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 md:p-10 relative mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          style={{
-            position: "absolute",
-            top: 18,
-            right: 18,
-            background: "none",
-            border: "none",
-            fontSize: 24,
-            color: "#bdbdbd",
-            cursor: "pointer",
-            zIndex: 2,
-          }}
+          className="absolute top-4 right-4 text-2xl text-gray-400 hover:text-gray-700 font-bold focus:outline-none"
           aria-label="Tutup"
         >
           ×
         </button>
-        <h2
-          style={{
-            textAlign: "center",
-            color: "#2c3e50",
-            fontWeight: 700,
-            fontSize: "2rem",
-            marginBottom: 12,
-          }}
-        >
+        <h2 className="text-center text-2xl md:text-3xl font-bold text-amber-900 mb-3">
           Lupa Password
         </h2>
-        <p
-          className="auth-subtext"
-          style={{ textAlign: "center", marginBottom: 24 }}
-        >
+        <p className="text-center mb-6 text-gray-600 text-sm">
           Masukkan email Anda, kami akan mengirimkan link untuk mereset
           password.
         </p>
         <form onSubmit={handleSubmit} autoComplete="off">
           {error && (
-            <div
-              style={{
-                color: "#e74c3c",
-                background: "#fbeeea",
-                borderRadius: 6,
-                padding: "8px 0",
-                marginBottom: 12,
-                textAlign: "center",
-                fontWeight: 600,
-              }}
-            >
+            <div className="text-red-600 bg-red-50 rounded px-3 py-2 mb-3 text-center font-semibold">
               {error}
             </div>
           )}
           {message && (
-            <div
-              style={{
-                color: "#16a34a",
-                background: "#eafbee",
-                borderRadius: 6,
-                padding: "8px 0",
-                marginBottom: 12,
-                textAlign: "center",
-                fontWeight: 600,
-              }}
-            >
+            <div className="text-green-700 bg-green-50 rounded px-3 py-2 mb-3 text-center font-semibold">
               {message}
             </div>
           )}
-          <div className="auth-form-group">
-            <label htmlFor="email_forgot">Alamat Email</label>
-            <input
-              type="email"
-              id="email_forgot"
-              className="auth-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Masukkan email terdaftar Anda"
-              required
-            />
+          <div className="mb-4">
+            <label
+              htmlFor="email_forgot"
+              className="block font-semibold mb-2 text-gray-700"
+            >
+              Alamat Email
+            </label>
+            <div className="relative">
+              <input
+                type="email"
+                id="email_forgot"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-base text-black focus:ring-2 focus:ring-amber-200 focus:border-amber-400 transition pr-12"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Masukkan email terdaftar Anda"
+                required
+              />
+              {/*
+              <span
+                className="absolute inset-y-0 right-4 flex items-center cursor-pointer text-gray-500"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34495e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="block"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" /><circle cx="12" cy="12" r="3" /></svg>
+              </span>
+              */}
+            </div>
           </div>
           <button
             type="submit"
-            className="auth-button"
-            style={{ background: "#16a34a" }}
+            className="w-full py-2 rounded-lg bg-green-600 text-white font-semibold text-base hover:bg-green-700 transition mt-2"
             disabled={loading}
           >
             {loading ? "Mengirim..." : "Kirim Link Reset"}
           </button>
         </form>
-        <div
-          className="auth-navigation-prompt"
-          style={{ textAlign: "center", marginTop: 24 }}
-        >
-          Ingat password?{" "}
+        <div className="text-center mt-6 text-sm">
           <button
             type="button"
             onClick={onLogin}
-            className="auth-link"
-            style={{
-              color: "#16a34a",
-              fontWeight: 600,
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-            }}
+            className="w-full mt-2 py-2 rounded-lg bg-white text-green-700 font-bold border border-green-600 hover:bg-green-50 transition focus:outline-none"
           >
             Login di sini
           </button>
+          <div className="text-gray-500 text-xs mt-2">Ingat password?</div>
         </div>
       </div>
     </div>

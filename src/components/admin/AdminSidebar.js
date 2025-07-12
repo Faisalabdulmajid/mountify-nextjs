@@ -87,7 +87,7 @@ export default function AdminSidebar({
           </div>
         </div>
         <Link
-          href="/admin/profile"
+          href="/profil"
           className="block w-full mb-2 py-2 px-3 rounded bg-white/10 text-white text-sm font-medium text-center hover:bg-white/20 transition"
         >
           Profil Saya

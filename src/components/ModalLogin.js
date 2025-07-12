@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
-import "./AuthForms.css";
 
 export default function ModalLogin({ open, onClose, onRegister, onForgot }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,80 +35,40 @@ export default function ModalLogin({ open, onClose, onRegister, onForgot }) {
 
   return (
     <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(44,62,80,0.18)",
-        zIndex: 9999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#2c3e50]/20"
       onClick={onClose}
     >
       <div
-        className="auth-form-container"
-        style={{
-          width: 480,
-          background: "#fff",
-          borderRadius: 18,
-          boxShadow: "0 2px 16px rgba(44,62,80,0.18)",
-          padding: 36,
-          margin: 24,
-          position: "relative",
-        }}
+        className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 md:p-10 relative mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          style={{
-            position: "absolute",
-            top: 18,
-            right: 18,
-            background: "none",
-            border: "none",
-            fontSize: 24,
-            color: "#bdbdbd",
-            cursor: "pointer",
-            zIndex: 2,
-          }}
+          className="absolute top-4 right-4 text-2xl text-gray-400 hover:text-gray-700 font-bold focus:outline-none"
           aria-label="Tutup"
         >
           ×
         </button>
-        <h2
-          style={{
-            textAlign: "center",
-            color: "#2c3e50",
-            fontWeight: 700,
-            fontSize: "2rem",
-            marginBottom: 32,
-          }}
-        >
+        <h2 className="text-center text-2xl md:text-3xl font-bold text-amber-900 mb-8">
           Login Akun
         </h2>
         <form autoComplete="off" onSubmit={handleManualLogin}>
           {error && (
-            <div
-              style={{
-                color: "#e74c3c",
-                background: "#fbeeea",
-                borderRadius: 6,
-                padding: "8px 0",
-                marginBottom: 12,
-                textAlign: "center",
-                fontWeight: 600,
-              }}
-            >
+            <div className="text-red-600 bg-red-50 rounded px-3 py-2 mb-3 text-center font-semibold">
               {error}
             </div>
           )}
-          <div className="auth-form-group">
-            <label htmlFor="email_login">Email</label>
+          <div className="mb-4">
+            <label
+              htmlFor="email_login"
+              className="block font-semibold mb-2 text-gray-700"
+            >
+              Email
+            </label>
             <input
               type="email"
               id="email_login"
-              className="auth-input"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-base text-black focus:ring-2 focus:ring-green-200 focus:border-green-500 transition font-medium placeholder-gray-400"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Masukkan email Anda"
@@ -117,62 +76,54 @@ export default function ModalLogin({ open, onClose, onRegister, onForgot }) {
               autoFocus
             />
           </div>
-          <div className="auth-form-group" style={{ position: "relative" }}>
-            <label htmlFor="password_login">Password</label>
-            <input
-              type={showPassword ? "text" : "password"}
-              id="password_login"
-              className="auth-input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Masukkan password Anda"
-              required
-              style={{ paddingRight: 44 }} // Tambah ruang untuk icon mata
-            />
-            <span
-              onClick={() => setShowPassword((prev) => !prev)}
-              style={{
-                cursor: "pointer",
-                position: "absolute",
-                right: 18,
-                top: "50%",
-                transform: "translateY(-50%)",
-                zIndex: 2,
-                background: "none",
-                padding: 0,
-                display: "flex",
-                alignItems: "center",
-                height: 22,
-              }}
-              title={showPassword ? "Sembunyikan Password" : "Lihat Password"}
+          <div className="mb-4 relative">
+            <label
+              htmlFor="password_login"
+              className="block font-semibold mb-2 text-gray-700"
             >
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#34495e"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ display: "block" }}
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password_login"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-base text-black focus:ring-2 focus:ring-green-200 focus:border-green-500 transition font-medium placeholder-gray-400 pr-12"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Masukkan password Anda"
+                required
+              />
+              <span
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-4 flex items-center cursor-pointer text-gray-500"
+                title={showPassword ? "Sembunyikan Password" : "Lihat Password"}
               >
-                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            </span>
+                {showPassword ? (
+                  <Image
+                    src="/show.svg"
+                    alt="show"
+                    width={20}
+                    height={20}
+                    className="block align-middle pointer-events-none h-5 w-5"
+                    priority
+                  />
+                ) : (
+                  <Image
+                    src="/hide.svg"
+                    alt="hide"
+                    width={20}
+                    height={20}
+                    className="block align-middle pointer-events-none h-5 w-5"
+                    priority
+                  />
+                )}
+              </span>
+            </div>
           </div>
-          <div className="auth-form-options">
+          <div className="mb-4 flex justify-end">
             <button
               type="button"
-              className="auth-link"
-              style={{
-                color: "#16a34a",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-              }}
+              className="text-green-700 font-semibold hover:underline focus:outline-none text-sm"
               onClick={onForgot}
             >
               Lupa Password?
@@ -180,35 +131,15 @@ export default function ModalLogin({ open, onClose, onRegister, onForgot }) {
           </div>
           <button
             type="submit"
-            className="auth-button"
-            style={{ background: "#16a34a" }}
+            className="w-full mt-2 py-2 rounded-lg bg-green-600 text-white font-bold text-base hover:bg-green-700 transition shadow-none"
             disabled={loading}
           >
             {loading ? "Memproses..." : "Login"}
           </button>
         </form>
-        <div className="auth-divider" style={{ margin: "28px 0 18px 0" }}>
-          ATAU
-        </div>
+        <div className="text-center my-7 text-gray-400 font-semibold">ATAU</div>
         <button
-          className="auth-google-button"
-          style={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 12,
-            background: "#fff",
-            color: "#222",
-            fontWeight: 600,
-            fontSize: 18,
-            borderRadius: 8,
-            padding: "14px 0",
-            border: "1.5px solid #e0e0e0",
-            marginBottom: 8,
-            boxShadow: "none",
-            position: "relative",
-          }}
+          className="w-full flex items-center justify-center gap-3 bg-white text-gray-800 font-semibold text-base rounded-lg py-3 border border-gray-300 mb-2 shadow-sm relative transition duration-150 hover:bg-green-50 hover:text-green-700 hover:border-green-500 hover:shadow-md focus:outline-none"
           onClick={() => {
             setLoading(true);
             signIn("google");
@@ -220,31 +151,20 @@ export default function ModalLogin({ open, onClose, onRegister, onForgot }) {
             alt="Google logo"
             width={24}
             height={24}
-            style={{ width: 24, height: 24 }}
+            className="w-6 h-6"
             priority
           />
           Login dengan Google
         </button>
-        <div
-          className="auth-navigation-prompt"
-          style={{ textAlign: "center", marginTop: 24 }}
-        >
-          Belum punya akun?{" "}
+        <div className="text-center mt-6 text-sm">
           <button
             type="button"
-            className="auth-link"
-            style={{
-              color: "#16a34a",
-              fontWeight: 600,
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-            }}
+            className="w-full mt-2 py-2 rounded-lg bg-white text-green-700 font-bold border border-green-600 hover:bg-green-50 transition focus:outline-none"
             onClick={onRegister}
           >
             Daftar sekarang
           </button>
+          <div className="text-gray-500 text-xs mt-2">Belum punya akun?</div>
         </div>
       </div>
     </div>

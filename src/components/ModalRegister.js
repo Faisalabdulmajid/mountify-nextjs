@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import "./AuthForms.css";
+import Image from "next/image";
 
 export default function ModalRegister({ open, onClose, onLogin }) {
   const [form, setForm] = useState({
@@ -50,251 +50,219 @@ export default function ModalRegister({ open, onClose, onLogin }) {
 
   return (
     <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(44,62,80,0.18)",
-        zIndex: 9999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#2c3e50]/20"
       onClick={onClose}
     >
       <div
-        className="auth-form-container"
-        style={{
-          width: 480,
-          background: "#fff",
-          borderRadius: 18,
-          boxShadow: "0 2px 16px rgba(44,62,80,0.18)",
-          padding: 36,
-          margin: 24,
-          position: "relative",
-        }}
+        className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 md:p-10 relative mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          style={{
-            position: "absolute",
-            top: 18,
-            right: 18,
-            background: "none",
-            border: "none",
-            fontSize: 24,
-            color: "#bdbdbd",
-            cursor: "pointer",
-            zIndex: 2,
-          }}
+          className="absolute top-4 right-4 text-2xl text-gray-400 hover:text-gray-700 font-bold focus:outline-none"
           aria-label="Tutup"
         >
           ×
         </button>
-        <h2
-          style={{
-            textAlign: "center",
-            color: "#2c3e50",
-            fontWeight: 700,
-            fontSize: "2rem",
-            marginBottom: 32,
-          }}
-        >
+        <h2 className="text-center text-2xl md:text-3xl font-bold text-amber-900 mb-8">
           Daftar Akun Baru
         </h2>
         <form onSubmit={handleSubmit} autoComplete="off">
           {error && (
-            <div
-              style={{
-                color: "#e74c3c",
-                background: "#fbeeea",
-                borderRadius: 6,
-                padding: "8px 0",
-                marginBottom: 12,
-                textAlign: "center",
-                fontWeight: 600,
-              }}
-            >
+            <div className="text-red-600 bg-red-50 rounded px-3 py-2 mb-3 text-center font-semibold">
               {error}
             </div>
           )}
           {success && (
-            <div
-              style={{
-                color: "#16a34a",
-                background: "#eafbee",
-                borderRadius: 6,
-                padding: "8px 0",
-                marginBottom: 12,
-                textAlign: "center",
-                fontWeight: 600,
-              }}
-            >
+            <div className="text-green-700 bg-green-50 rounded px-3 py-2 mb-3 text-center font-semibold">
               {success}
             </div>
           )}
-          <div className="auth-form-group">
-            <label htmlFor="nama_lengkap">Nama Lengkap</label>
+          <div className="mb-4">
+            <label
+              htmlFor="rolelevel"
+              className="block font-semibold mb-2 text-gray-700"
+            >
+              Tingkat Peran Pengguna
+            </label>
+            <select
+              name="rolelevel"
+              id="rolelevel"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-base text-black focus:ring-2 focus:ring-amber-200 focus:border-amber-400 transition"
+              value={form.rolelevel || "pendaki"}
+              onChange={handleChange}
+              required
+            >
+              <option value="pendaki">Pendaki</option>
+              <option value="kontributor">Kontributor Ahli</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="nama_lengkap"
+              className="block font-semibold mb-2 text-gray-700"
+            >
+              Nama Lengkap
+            </label>
             <input
               type="text"
               name="nama_lengkap"
               id="nama_lengkap"
-              className="auth-input"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-base text-black focus:ring-2 focus:ring-amber-200 focus:border-amber-400 transition"
               value={form.nama_lengkap}
               onChange={handleChange}
               required
               placeholder="Masukkan nama lengkap Anda"
             />
           </div>
-          <div className="auth-form-group">
-            <label htmlFor="username">Username</label>
+          <div className="mb-4">
+            <label
+              htmlFor="username"
+              className="block font-semibold mb-2 text-gray-700"
+            >
+              Username
+            </label>
             <input
               type="text"
               name="username"
               id="username"
-              className="auth-input"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-base text-black focus:ring-2 focus:ring-amber-200 focus:border-amber-400 transition"
               value={form.username}
               onChange={handleChange}
               required
               placeholder="Masukkan username"
             />
           </div>
-          <div className="auth-form-group">
-            <label htmlFor="email_reg">Email</label>
+          <div className="mb-4">
+            <label
+              htmlFor="email_reg"
+              className="block font-semibold mb-2 text-gray-700"
+            >
+              Email
+            </label>
             <input
               type="email"
               name="email"
               id="email_reg"
-              className="auth-input"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-base text-black focus:ring-2 focus:ring-amber-200 focus:border-amber-400 transition"
               value={form.email}
               onChange={handleChange}
               required
               placeholder="Masukkan email Anda"
             />
           </div>
-          <div className="auth-form-group" style={{ position: "relative" }}>
-            <label htmlFor="password_reg">Password</label>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              id="password_reg"
-              className="auth-input"
-              value={form.password}
-              onChange={handleChange}
-              required
-              style={{ paddingRight: 44 }}
-              placeholder="Masukkan password"
-            />
-            <span
-              onClick={() => setShowPassword((prev) => !prev)}
-              style={{
-                cursor: "pointer",
-                position: "absolute",
-                right: 18,
-                top: "50%",
-                transform: "translateY(-50%)",
-                zIndex: 2,
-                background: "none",
-                padding: 0,
-                display: "flex",
-                alignItems: "center",
-                height: 22,
-              }}
-              title={showPassword ? "Sembunyikan Password" : "Lihat Password"}
+          <div className="mb-4 relative">
+            <label
+              htmlFor="password_reg"
+              className="block font-semibold mb-2 text-gray-700"
             >
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#34495e"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ display: "block" }}
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                id="password_reg"
+                className="w-full border border-gray-300 rounded-lg px-4 py-4 leading-none text-base text-black focus:ring-2 focus:ring-amber-200 focus:border-amber-400 transition pr-12"
+                value={form.password}
+                onChange={handleChange}
+                required
+                placeholder="Masukkan password"
+              />
+              <span
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute top-1/2 -translate-y-1/2 right-4 flex items-center justify-center cursor-pointer text-gray-500 transition-colors duration-200 p-0"
+                title={showPassword ? "Sembunyikan Password" : "Lihat Password"}
               >
-                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            </span>
+                {showPassword ? (
+                  <Image
+                    src="/show.svg"
+                    alt="show"
+                    width={20}
+                    height={20}
+                    className="block align-middle pointer-events-none h-5 w-5"
+                    priority
+                  />
+                ) : (
+                  <Image
+                    src="/hide.svg"
+                    alt="hide"
+                    width={20}
+                    height={20}
+                    className="block align-middle pointer-events-none h-5 w-5"
+                    priority
+                  />
+                )}
+              </span>
+            </div>
           </div>
-          <div className="auth-form-group" style={{ position: "relative" }}>
-            <label htmlFor="confirmPassword">Konfirmasi Password</label>
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              id="confirmPassword"
-              className="auth-input"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              required
-              style={{ paddingRight: 44 }}
-              placeholder="Ulangi password"
-            />
-            <span
-              onClick={() => setShowConfirmPassword((prev) => !prev)}
-              style={{
-                cursor: "pointer",
-                position: "absolute",
-                right: 18,
-                top: "50%",
-                transform: "translateY(-50%)",
-                zIndex: 2,
-                background: "none",
-                padding: 0,
-                display: "flex",
-                alignItems: "center",
-                height: 22,
-              }}
-              title={
-                showConfirmPassword ? "Sembunyikan Password" : "Lihat Password"
-              }
+          <div className="mb-4 relative">
+            <label
+              htmlFor="confirmPassword"
+              className="block font-semibold mb-2 text-gray-700"
             >
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#34495e"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ display: "block" }}
+              Konfirmasi Password
+            </label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                id="confirmPassword"
+                className="w-full border border-gray-300 rounded-lg px-4 py-4 leading-none text-base text-black focus:ring-2 focus:ring-amber-200 focus:border-amber-400 transition pr-12"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                required
+                placeholder="Ulangi password"
+              />
+              <span
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute top-1/2 -translate-y-1/2 right-4 flex items-center justify-center cursor-pointer text-gray-500 transition-colors duration-200 p-0"
+                title={
+                  showConfirmPassword
+                    ? "Sembunyikan Password"
+                    : "Lihat Password"
+                }
               >
-                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            </span>
+                {showConfirmPassword ? (
+                  <Image
+                    src="/show.svg"
+                    alt="show"
+                    width={20}
+                    height={20}
+                    className="block align-middle pointer-events-none h-5 w-5"
+                    priority
+                  />
+                ) : (
+                  <Image
+                    src="/hide.svg"
+                    alt="hide"
+                    width={20}
+                    height={20}
+                    className="block align-middle pointer-events-none h-5 w-5"
+                    priority
+                  />
+                )}
+              </span>
+            </div>
           </div>
           <button
             type="submit"
-            className="auth-button"
-            style={{ background: "#16a34a" }}
+            className="w-full py-2 rounded-lg bg-green-600 text-white font-semibold text-base hover:bg-green-700 transition mt-2"
             disabled={loading}
           >
             {loading ? "Mendaftar..." : "Buat Akun"}
           </button>
         </form>
-        <div
-          className="auth-navigation-prompt"
-          style={{ textAlign: "center", marginTop: 24 }}
-        >
-          Sudah punya akun?{" "}
+        <div className="text-center mt-6 text-sm">
           <button
             type="button"
             onClick={onLogin}
-            className="auth-link"
-            style={{
-              color: "#16a34a",
-              fontWeight: 600,
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-            }}
+            className="w-full mt-2 py-2 rounded-lg bg-white text-green-700 font-bold border border-green-600 hover:bg-green-50 transition focus:outline-none"
           >
             Login di sini
           </button>
+          <div className="text-gray-500 text-xs mt-2">Sudah punya akun?</div>
         </div>
       </div>
     </div>
