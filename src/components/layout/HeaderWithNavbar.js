@@ -45,6 +45,7 @@ export default function HeaderWithNavbar({ user }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
+  const [authActive, setAuthActive] = useState("login");
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -115,7 +116,10 @@ export default function HeaderWithNavbar({ user }) {
               <li>
                 <button
                   className="px-4 py-2 rounded-md font-medium bg-[#f58554] hover:bg-[#e07041] text-[#142640] transition"
-                  onClick={() => setShowAuth(true)}
+                  onClick={() => {
+                    setAuthActive("register");
+                    setShowAuth(true);
+                  }}
                 >
                   Daftar
                 </button>
@@ -160,6 +164,7 @@ export default function HeaderWithNavbar({ user }) {
                     className="w-full px-8 py-4 text-left font-medium bg-[#f58554] hover:bg-[#e07041] text-[#142640] transition"
                     onClick={() => {
                       setMenuOpen(false);
+                      setAuthActive("register");
                       setShowAuth(true);
                     }}
                   >
@@ -177,7 +182,12 @@ export default function HeaderWithNavbar({ user }) {
           onClick={() => setMenuOpen(false)}
         ></div>
       )}
-      <AuthModal open={showAuth} onClose={() => setShowAuth(false)} />
+      <AuthModal
+        open={showAuth}
+        onClose={() => setShowAuth(false)}
+        active={authActive}
+        setActive={setAuthActive}
+      />
     </header>
   );
 }

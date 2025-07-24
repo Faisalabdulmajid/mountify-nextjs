@@ -3,14 +3,14 @@ import { useState } from "react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import Link from "next/link";
 
-const ROLE_OPTIONS = ["Admin", "User"];
+const ROLE_OPTIONS = ["Pendaki", "Kontributor Ahli", "Administrator"];
 const STATUS_OPTIONS = ["Aktif", "Tidak Aktif"];
 
 export default function TambahPenggunaPage() {
   const [formData, setFormData] = useState({
     nama: "",
     email: "",
-    role: "User",
+    role: "Pendaki", // Default sesuai role register
     status: "Aktif",
     password: "",
   });
@@ -20,15 +20,28 @@ export default function TambahPenggunaPage() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      alert(
-        "Pengguna berhasil ditambahkan!\n" + JSON.stringify(formData, null, 2)
-      );
-      setIsLoading(false);
-    }, 1000);
+    try {
+      const res = await fetch("http://localhost:5000/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error("Gagal menambah pengguna");
+      alert("Pengguna berhasil ditambahkan!");
+      setFormData({
+        nama: "",
+        email: "",
+        role: "User",
+        status: "Aktif",
+        password: "",
+      });
+    } catch (err) {
+      alert(err.message);
+    }
+    setIsLoading(false);
   };
 
   return (

@@ -18,7 +18,7 @@ export default function ModalLogin({ open, onClose, onRegister, onForgot }) {
     setLoading(true);
     // Ganti URL di bawah dengan endpoint backend Anda jika ingin login manual aktif
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

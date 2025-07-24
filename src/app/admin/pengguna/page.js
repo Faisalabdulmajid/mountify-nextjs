@@ -13,41 +13,14 @@ export default function KelolaPenggunaPage() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
   useEffect(() => {
-    // Dummy data pengguna
     setIsLoading(true);
-    setTimeout(() => {
-      setUserList([
-        {
-          id: 1,
-          nama: "Faisal Abdul Majid",
-          email: "faisal@example.com",
-          role: "Admin",
-          status: "Aktif",
-        },
-        {
-          id: 2,
-          nama: "Budi Santoso",
-          email: "budi@example.com",
-          role: "User",
-          status: "Aktif",
-        },
-        {
-          id: 3,
-          nama: "Siti Aminah",
-          email: "siti@example.com",
-          role: "User",
-          status: "Tidak Aktif",
-        },
-        {
-          id: 4,
-          nama: "Admin Gunung",
-          email: "admin@example.com",
-          role: "Admin",
-          status: "Aktif",
-        },
-      ]);
-      setIsLoading(false);
-    }, 500);
+    fetch("http://localhost:5000/api/users") // Ganti URL sesuai backend Anda
+      .then((res) => res.json())
+      .then((data) => {
+        setUserList(data);
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false));
   }, []);
 
   const filteredUser = useMemo(() => {

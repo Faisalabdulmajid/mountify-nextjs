@@ -1,42 +1,50 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ModalLogin from "./ModalLogin";
 import ModalRegister from "./ModalRegister";
 import ModalForgotPassword from "./ModalForgotPassword";
+export default function AuthModal({
+  open,
+  onClose,
+  active = "login",
+  setActive,
+}) {
+  const [internalActive, setInternalActive] = useState(active);
 
-export default function AuthModal({ open, onClose }) {
-  const [active, setActive] = useState("login"); // "login" | "register" | "forgot"
+  useEffect(() => {
+    setInternalActive(active);
+  }, [active]);
 
   // Reset ke login saat modal dibuka ulang
   if (!open) return null;
 
   const handleClose = () => {
-    setActive("login");
+    setActive && setActive("login");
     onClose();
   };
 
   return (
     <>
-      {active === "login" && (
+      {internalActive === "login" && (
         <ModalLogin
           open={open}
           onClose={handleClose}
-          onRegister={() => setActive("register")}
-          onForgot={() => setActive("forgot")}
+          onRegister={() => setActive && setActive("register")}
+          onForgot={() => setActive && setActive("forgot")}
         />
       )}
-      {active === "register" && (
+      {internalActive === "register" && (
         <ModalRegister
           open={open}
           onClose={handleClose}
-          onLogin={() => setActive("login")}
+          onLogin={() => setActive && setActive("login")}
         />
       )}
-      {active === "forgot" && (
+      {internalActive === "forgot" && (
         <ModalForgotPassword
           open={open}
           onClose={handleClose}
-          onLogin={() => setActive("login")}
+          onLogin={() => setActive && setActive("login")}
         />
       )}
     </>
